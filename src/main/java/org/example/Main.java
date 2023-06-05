@@ -3,6 +3,8 @@ package org.example;
 import org.example.components.Sparrow;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.function.Supplier;
+
 public class Main {
     public static void main(String[] args) {
         var context = new AnnotationConfigApplicationContext(ProjectConfig.class);
@@ -35,5 +37,12 @@ public class Main {
         sparrow1.setName("Chirp");
         System.out.println(sparrow1.getName());
 
+        // add bean to context programmatically
+        Parrot parrotP = new Parrot(); //create required instance to add to context
+        parrotP.setName("Kiki");
+        Supplier<Parrot> parrotSupplier = () -> parrotP;
+        context.registerBean("parrotP", Parrot.class, parrotSupplier); // add bean to context
+        p = context.getBean("parrotP", Parrot.class);
+        System.out.println(p.getName());
     }
 }
