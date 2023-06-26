@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.components.PersonComponent;
+import org.example.components.PersonComponentWithConstructor;
 import org.example.components.Sparrow;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -7,7 +9,14 @@ import java.util.function.Supplier;
 
 public class Main {
     public static void main(String[] args) {
-        var context = new AnnotationConfigApplicationContext(ProjectConfig.class);
+//        var context = new AnnotationConfigApplicationContext(ProjectConfig.class);
+//        chapter2(context);
+
+        var context = new AnnotationConfigApplicationContext(ProjectConfigCh3.class);
+        chapter3(context);
+    }
+
+    public static void chapter2(AnnotationConfigApplicationContext context) {
         // get beans by name/value
         Parrot p = context.getBean("koko", Parrot.class);
         System.out.println(p.getName());
@@ -44,5 +53,22 @@ public class Main {
         context.registerBean("parrotP", Parrot.class, parrotSupplier); // add bean to context
         p = context.getBean("parrotP", Parrot.class);
         System.out.println(p.getName());
+    }
+
+    public static void chapter3(AnnotationConfigApplicationContext context) {
+//        Person person = context.getBean("personDirect", Person.class);
+        Person person = context.getBean("personWithParam", Person.class);
+        Parrot parrot = context.getBean(Parrot.class);
+        System.out.println("Person's name: " + person.getName());
+        System.out.println("Parrot's name: " + parrot.getName());
+        System.out.println("Person's parrot: " + person.getParrot());
+        System.out.println("---\nUsing component annotation and autowired\n---");
+        PersonComponent personComponent = context.getBean(PersonComponent.class);
+        System.out.println("Person's name: " + personComponent.getName());
+        System.out.println("Person's parrot: " + personComponent.getParrot().getName());
+        System.out.println("---\nUsing component annotation and autowired on constructor\n---");
+        PersonComponentWithConstructor personCWC = context.getBean(PersonComponentWithConstructor.class);
+        System.out.println("Person's name: " + personCWC.getName());
+        System.out.println("Person's parrot: " + personCWC.getParrot().getName());
     }
 }
